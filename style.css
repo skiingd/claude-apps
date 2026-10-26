@@ -1,0 +1,138 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f6f5f1;
+  --surface: #ffffff;
+  --text: #1f1e1c;
+  --muted: #6b6862;
+  --line: #e2dfd8;
+  --accent: #c96442;
+  --accent-text: #ffffff;
+  --danger: #b3261e;
+  --radius: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1b19;
+    --surface: #2a2926;
+    --text: #f1efe9;
+    --muted: #a5a199;
+    --line: #3a3834;
+    --accent: #e07a55;
+    --accent-text: #1c1b19;
+    --danger: #f2b8b5;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+[hidden] { display: none !important; }
+button { font: inherit; color: inherit; cursor: pointer; }
+
+.bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: calc(env(safe-area-inset-top) + 8px) 16px 8px;
+  background: var(--bg);
+  position: sticky; top: 0; z-index: 2;
+}
+.bar h1, .bar h2 { font-size: 20px; margin: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-actions { display: flex; gap: 4px; }
+.icon-btn {
+  width: 44px; height: 44px; border: 0; border-radius: 50%;
+  background: transparent; font-size: 22px; display: grid; place-items: center;
+}
+.icon-btn:active, .icon-btn[aria-pressed="true"] { background: var(--line); }
+
+main { padding: 8px 16px 112px; }
+
+.grid {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+.tile {
+  position: relative; width: 100%; min-height: 112px;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface);
+  padding: 14px; text-align: left;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 8px;
+}
+.tile:active { transform: scale(0.98); }
+.tile .emoji { font-size: 30px; line-height: 1; }
+.tile .name { font-weight: 600; overflow-wrap: anywhere; }
+.tile .kind { font-size: 12px; color: var(--muted); }
+body.editing .tile { border-style: dashed; border-color: var(--accent); }
+body.editing .tile::after {
+  content: "✎"; position: absolute; top: 10px; right: 12px; color: var(--accent);
+}
+
+.empty { text-align: center; margin-top: 20vh; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+
+.fab {
+  position: fixed; right: 20px; bottom: calc(env(safe-area-inset-bottom) + 20px);
+  width: 60px; height: 60px; border-radius: 18px; border: 0;
+  background: var(--accent); color: var(--accent-text);
+  font-size: 32px; line-height: 1;
+  box-shadow: 0 4px 14px rgba(0,0,0,.25);
+}
+
+.sheet {
+  width: min(560px, 100vw - 32px); max-height: calc(100vh - 32px);
+  border: 0; border-radius: var(--radius); padding: 20px;
+  background: var(--surface); color: var(--text);
+}
+.sheet::backdrop { background: rgba(0,0,0,.45); }
+.sheet h2 { margin: 0 0 16px; font-size: 20px; }
+
+.field { display: block; margin-bottom: 14px; }
+.field span { display: block; font-size: 14px; color: var(--muted); margin-bottom: 4px; }
+.field input, .field textarea {
+  width: 100%; padding: 10px 12px; font: inherit; color: inherit;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+}
+.field textarea { font-family: ui-monospace, monospace; font-size: 13px; resize: vertical; }
+.field input:focus, .field textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+
+.seg { border: 0; padding: 0; margin: 0 0 14px; display: flex; gap: 8px; }
+.seg legend { font-size: 14px; color: var(--muted); margin-bottom: 4px; padding: 0; }
+.seg label {
+  flex: 1; text-align: center; padding: 10px; border: 1px solid var(--line); border-radius: 10px;
+}
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label:has(input:checked) { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); }
+
+.actions { display: flex; gap: 8px; align-items: center; margin-top: 18px; }
+.spacer { flex: 1; }
+.btn {
+  border: 1px solid var(--line); background: transparent;
+  padding: 10px 16px; border-radius: 10px;
+}
+.btn.small { padding: 6px 12px; font-size: 14px; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.btn.danger { color: var(--danger); border-color: var(--danger); }
+.row-btn {
+  display: block; width: 100%; text-align: left; padding: 14px 12px;
+  border: 0; border-bottom: 1px solid var(--line); background: transparent;
+}
+.error { color: var(--danger); font-size: 14px; }
+
+.viewer {
+  position: fixed; inset: 0; z-index: 10;
+  background: var(--bg); display: flex; flex-direction: column;
+}
+.viewer iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+
+.toast {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(env(safe-area-inset-bottom) + 96px);
+  background: var(--text); color: var(--bg);
+  padding: 10px 16px; border-radius: 10px; font-size: 14px;
+  max-width: calc(100vw - 32px); z-index: 20;
+}

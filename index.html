@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Claude-Apps</title>
+  <meta name="description" content="Startseite für eigene Claude-Artefakte">
+  <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1b19" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="bar">
+    <h1>Claude-Apps</h1>
+    <div class="bar-actions">
+      <button id="btn-edit" class="icon-btn" type="button" aria-pressed="false" title="Bearbeiten">✎</button>
+      <button id="btn-menu" class="icon-btn" type="button" title="Mehr">⋮</button>
+    </div>
+  </header>
+
+  <main>
+    <ul id="grid" class="grid" aria-label="Artefakte"></ul>
+    <div id="empty" class="empty" hidden>
+      <p>Noch keine Artefakte.</p>
+      <p class="muted">Tippe auf <strong>+</strong> und füge einen Link von claude.ai oder HTML-Code ein.</p>
+    </div>
+  </main>
+
+  <button id="btn-add" class="fab" type="button" aria-label="Artefakt hinzufügen">+</button>
+
+  <!-- Menü -->
+  <dialog id="menu" class="sheet">
+    <form method="dialog">
+      <h2>Mehr</h2>
+      <button type="button" id="btn-export" class="row-btn">Sicherung exportieren</button>
+      <button type="button" id="btn-import" class="row-btn">Sicherung importieren</button>
+      <input type="file" id="import-file" accept="application/json,.json" hidden>
+      <p class="muted small">Deine Einträge liegen nur in diesem Browser auf diesem Handy. Exportiere ab und zu eine Sicherung.</p>
+      <div class="actions"><button value="close" class="btn">Schließen</button></div>
+    </form>
+  </dialog>
+
+  <!-- Hinzufügen / Bearbeiten -->
+  <dialog id="editor" class="sheet">
+    <form id="editor-form" method="dialog">
+      <h2 id="editor-title">Artefakt hinzufügen</h2>
+
+      <label class="field">
+        <span>Name</span>
+        <input name="name" required maxlength="60" autocomplete="off">
+      </label>
+
+      <label class="field">
+        <span>Symbol (Emoji, optional)</span>
+        <input name="emoji" maxlength="8" autocomplete="off" placeholder="z. B. 📊">
+      </label>
+
+      <fieldset class="seg">
+        <legend>Art</legend>
+        <label><input type="radio" name="kind" value="link" checked> Link</label>
+        <label><input type="radio" name="kind" value="html"> HTML-Kopie</label>
+      </fieldset>
+
+      <div data-kind="link">
+        <label class="field">
+          <span>Adresse</span>
+          <input name="url" inputmode="url" placeholder="https://claude.ai/…" autocomplete="off">
+        </label>
+        <p class="muted small">Öffnet das Artefakt im Browser. Läuft mit vollem Funktionsumfang, braucht Internet und Login.</p>
+      </div>
+
+      <div data-kind="html" hidden>
+        <label class="field">
+          <span>HTML-Code</span>
+          <textarea name="html" rows="6" spellcheck="false" placeholder="&lt;!doctype html&gt;…"></textarea>
+        </label>
+        <button type="button" id="btn-html-file" class="btn small">.html-Datei wählen</button>
+        <input type="file" id="html-file" accept=".html,.htm,text/html" hidden>
+        <p class="muted small">Wird in dieser App angezeigt, auch offline. Funktionen von claude.ai (gespeicherte Daten, Claude fragen) gehen hier nicht.</p>
+      </div>
+
+      <p id="editor-error" class="error" role="alert" hidden></p>
+
+      <div class="actions">
+        <button type="button" id="btn-delete" class="btn danger" hidden>Löschen</button>
+        <span class="spacer"></span>
+        <button value="cancel" formnovalidate class="btn">Abbrechen</button>
+        <button value="save" class="btn primary">Speichern</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Anzeige für HTML-Kopien -->
+  <section id="viewer" class="viewer" hidden>
+    <header class="bar">
+      <button id="btn-close-viewer" class="icon-btn" type="button" aria-label="Zurück">←</button>
+      <h2 id="viewer-title"></h2>
+      <span class="icon-btn" aria-hidden="true"></span>
+    </header>
+    <iframe id="viewer-frame" title="Artefakt"
+      sandbox="allow-scripts allow-forms allow-popups allow-modals allow-downloads"
+      referrerpolicy="no-referrer"></iframe>
+  </section>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
